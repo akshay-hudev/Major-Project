@@ -1,0 +1,343 @@
+{
+  "source": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\Akshay\\Programming\\Longitudinal-Temporal-Disease-Progression-main\\Updated_Longitudinal_Temporal_Disease_Progression.pptx",
+  "slide_count": 14,
+  "slides": [
+    {
+      "slide": 1,
+      "content": [
+        "Department of Computer Science and Engineering",
+        "JP Nagar, Kothanur, Bengaluru - 560076",
+        " Academic year 2026– 2027 ",
+        "Major Project Phase 3",
+        "Major Project (BCS685) ",
+        "Review - 1",
+        "LONGITUDINAL TEMPORAL DISEASE PROGRESSION",
+        "Heart Disease Modeling with Deep Learning & Gradient Boosting",
+        "Presented by: ",
+        "H M Akshay- 1RF23CS068",
+        "Hemanth Kumar K- 1RF23CS072",
+        "Shreya Gopalakrishna- 1RF23CS159",
+        "Venkat Baba Yemineni- 1RF23CS181",
+        "Under the Guidance of:",
+        "Mrs. Padmasree N",
+        "Assistant Professor",
+        "Dept. of CS&E",
+        "RVITM",
+        "i"
+      ],
+      "notes": ""
+    },
+    {
+      "slide": 2,
+      "content": [
+        "CONTENTS",
+        "ii",
+        "Introduction",
+        "Problem Statement",
+        "Literature Survey",
+        "Methodology",
+        "Project Outcomes & Results",
+        "References",
+        "1",
+        "2",
+        "3-4",
+        "5",
+        "6–10",
+        "11"
+      ],
+      "notes": ""
+    },
+    {
+      "slide": 3,
+      "content": [
+        "INTRODUCTION",
+        "• Cardiovascular deterioration is a trajectory, not a single snapshot.",
+        "• We formulate progression as binary classification: worsening vs stable/improving.",
+        "• MIMIC-IV 2.1 ICU admissions are represented as sequences of 6 visits × 59 features.",
+        "• BiLSTM-attention, BiGRU, and Transformer models learn directly from visit sequences.",
+        "• Temporal feature engineering exposes trend, variability, velocity, and acceleration.",
+        "• Calibrated gradient boosting produces the strongest and most deployable model.",
+        "1",
+        "SEQUENCE MODELS",
+        "BiLSTM-attention",
+        "BiGRU",
+        "Transformer encoder",
+        "TEMPORAL DESCRIPTORS",
+        "Trend • variability",
+        "velocity • acceleration",
+        "1,534 rich features",
+        "CALIBRATED RISK",
+        "HistGB • LightGBM • XGBoost",
+        "soft-vote ensemble",
+        "interpretable importance"
+      ],
+      "notes": ""
+    },
+    {
+      "slide": 4,
+      "content": [
+        "PROBLEM STATEMENT",
+        "2",
+        "• Single-visit classifiers discard clinically meaningful change across admissions.",
+        "• The target class is imbalanced: only 16.9% of samples represent worsening progression.",
+        "• Sequence models can rank risk well, but the baseline shows low precision at threshold 0.5.",
+        "• A useful system must preserve recall while reducing false-positive alerts.",
+        "• It must also be CPU-friendly, calibrated, and interpretable enough for deployment.",
+        "Research question: can explicit temporal descriptors outperform heavier sequence models?"
+      ],
+      "notes": ""
+    },
+    {
+      "slide": 5,
+      "content": [
+        {
+          "__table__": [
+            [
+              "Year",
+              "Title",
+              "Author(s)",
+              "Description",
+              "Advantages",
+              "Drawbacks"
+            ],
+            [
+              "2025",
+              "Advanced Heart Disease Prediction Through Temporal Feature with SCN-Deep",
+              "Vivek Pandey, Umesh Kumar Lilhore",
+              "Hybrid deep BiLSTM model predicts heart disease from ECG signals.",
+              "Captures spatial and temporal ECG features accurately.",
+              "Relies heavily on ECG signal availability."
+            ],
+            [
+              "2024",
+              "Application of Deep Learning for Heart Attack Prediction with XAI",
+              "Elias Dritsas, Maria Trigka",
+              "Compares multiple deep learning models for heart attack prediction with explainable AI.",
+              "High accuracy with interpretable predictions using SHAP explanations.",
+              "Limited generalization due to dataset and static inputs."
+            ],
+            [
+              "2024",
+              "Early Detection of Heart Failure Using In-Patient Longitudinal EHR",
+              "Ignat Drozdov, Benjamin Szubert",
+              "Transformer predicts heart failure using longitudinal EHR.",
+              "Captures temporal dynamics and reveals disease subtypes.",
+              "Needs large datasets and limited interpretability."
+            ],
+            [
+              "2023",
+              "Deep Learning-Based Heart Disease Prediction Study",
+              "Hewa Majeed Zangana, Maryam A. Sulaiman",
+              "Detects early disease prediction using longitudinal EHRs.",
+              "Early prediction with built-in temporal and feature explainability.",
+              "Requires large EHR datasets and retrospective validation."
+            ]
+          ]
+        },
+        "LITERATURE SURVEY",
+        "3"
+      ],
+      "notes": ""
+    },
+    {
+      "slide": 6,
+      "content": [
+        {
+          "__table__": [
+            [
+              "Year",
+              "Title",
+              "Author(s)",
+              "Description",
+              "Advantages",
+              "Drawbacks"
+            ],
+            [
+              "2023",
+              "MIMIC-IV, a Freely Accessible Electronic Health Record Dataset",
+              "A. E. W. Johnson et al.",
+              "Presents the deidentified hospital and ICU dataset used for reproducible clinical ML.",
+              "Large-scale longitudinal data with detailed documentation.",
+              "Credentialed access; observational, single-center data."
+            ],
+            [
+              "2025",
+              "Longitudinal Health Trajectories with a Transformer-Based Deep Learning",
+              "Hans Moen et al",
+              "Transformer model for longitudinal disease trajectory prediction.",
+              "Captures temporal patterns and evolving patient health trajectories.",
+              "Needs large datasets and limited interpretability."
+            ],
+            [
+              "2024",
+              "Clustering of Disease Progression Patterns",
+              "Dulin Wang , Xiaotian Ma , Paul E.",
+              "Clusters patients using temporal deep learning on longitudinal data.",
+              "Captures temporal dynamics and reveals disease subtypes.",
+              "Complex model with limited clinical deployment readiness."
+            ],
+            [
+              "2021",
+              "Transformer Models for Early Chronic Disease Predicti",
+              "Hewa Majeed Zangana, Maryam A. Sulaiman",
+              "Detects early disease prediction using longitudinal EHRs.",
+              "Early prediction with built-in temporal and feature explainability.",
+              "Requires large EHR datasets and retrospective validation."
+            ]
+          ]
+        },
+        "LITERATURE SURVEY",
+        "4"
+      ],
+      "notes": ""
+    },
+    {
+      "slide": 7,
+      "content": [
+        "METHODOLOGY",
+        "5",
+        "1",
+        "MIMIC-IV 2.1",
+        "Cardiac cohort",
+        "35,256 samples",
+        "2",
+        "Preprocess",
+        "Impute, scale, sanitize",
+        "70/15/15 split",
+        "3",
+        "Sequence",
+        "6 visits × 59 features",
+        "per patient sample",
+        "4",
+        "Two model tracks",
+        "BiLSTM • BiGRU • Transformer",
+        "Temporal GBM features",
+        "5",
+        "Validate & calibrate",
+        "Isotonic calibration",
+        "F1-tuned threshold",
+        "Output: calibrated probability of worsening progression",
+        "Evaluation: Accuracy • Precision • Recall • F1 • ROC-AUC • PR-AUC"
+      ],
+      "notes": ""
+    },
+    {
+      "slide": 8,
+      "content": [
+        "PROJECT OUTCOMES",
+        "6",
+        "The project now delivers a reproducible full-data pipeline and a stronger deployable model.",
+        "35,256",
+        "total longitudinal samples",
+        "0.7334",
+        "best F1 • GBM soft vote",
+        "0.9462",
+        "best ROC-AUC",
+        "3.3 MB",
+        "self-contained deployable artifact",
+        "✓ Full MIMIC-IV 2.1 cardiac progression cohort",
+        "✓ Fair baseline reproduction on identical arrays",
+        "✓ Calibrated threshold selected only on validation data",
+        "✓ Millisecond CPU inference; GPU not required",
+        "✓ Native feature importance for temporal drivers",
+        "✓ Saved metrics, predictions, and regeneration scripts"
+      ],
+      "notes": ""
+    },
+    {
+      "slide": 9,
+      "content": [
+        "PROGRESS & RESULTS",
+        "7",
+        "DATASET & INPUT",
+        "MIMIC-IV 2.1 cardiac cohort",
+        "• Train: 24,678 (4,178 worsening)",
+        "• Validation: 5,289 (896 worsening)",
+        "• Test: 5,289 (896 worsening)",
+        "• Positive class: 16.9%",
+        "Each sample: 6 visits × 59 features",
+        "Vitals • labs • cardiac markers • demographics • history • temporal gaps",
+        "BASELINE → IMPROVED"
+      ],
+      "notes": ""
+    },
+    {
+      "slide": 10,
+      "content": [
+        "PROGRESS & RESULTS",
+        "8",
+        "WHY TEMPORAL GBM WINS",
+        "The sequence is short (6 timesteps), so explicit change descriptors are highly informative.",
+        "Engineered per feature:",
+        "• first / last / mean / median",
+        "• min / max / range / IQR",
+        "• delta / slope / half-split trend",
+        "• velocity / acceleration",
+        "• variability / total variation",
+        "HistGB + LightGBM + XGBoost",
+        "→ isotonic calibration → soft vote",
+        "MOST IMPORTANT TEMPORAL SIGNALS"
+      ],
+      "notes": ""
+    },
+    {
+      "slide": 11,
+      "content": [
+        "PROGRESS & RESULTS",
+        "9",
+        "BEST MODEL",
+        "GBM soft-vote ensemble",
+        "HistGB + LightGBM + XGBoost",
+        "Isotonic-calibrated",
+        "Validation-tuned threshold: 0.335",
+        "0.7334",
+        "F1",
+        "0.9462",
+        "ROC-AUC",
+        "0.7226",
+        "Precision",
+        "0.7444",
+        "Recall",
+        "HELD-OUT TEST SET • n = 5,289"
+      ],
+      "notes": ""
+    },
+    {
+      "slide": 12,
+      "content": [
+        "PROGRESS & RESULTS",
+        "10",
+        "KEY FINDINGS",
+        "• Best reproduced sequence baseline: Transformer",
+        "  F1 0.6319 • AUC 0.9168",
+        "• GBM soft vote improves F1 by 0.1015 (+16%).",
+        "• Precision rises from 0.5174 to 0.7226 while recall remains 0.7444.",
+        "• Improved models dominate the ROC and precision-recall curves.",
+        "• Important signals are clinically plausible: SpO₂, blood-pressure and heart-rate variability, bicarbonate, and WBC.",
+        "ROC CURVES • BASELINES VS TEMPORAL GBM"
+      ],
+      "notes": ""
+    },
+    {
+      "slide": 13,
+      "content": [
+        "REFERENCES",
+        "11",
+        "[1] A. E. W. Johnson et al., “MIMIC-IV, a freely accessible electronic health record dataset,” Scientific Data, vol. 10, 2023. DOI: 10.1038/s41597-022-01899-x.",
+        "[2] A. E. W. Johnson et al., MIMIC-IV v2.1, PhysioNet, 2022. DOI: 10.13026/6mm1-ek67.",
+        "[3] A. Vaswani et al., “Attention Is All You Need,” Advances in Neural Information Processing Systems, 2017.",
+        "[4] T. Chen and C. Guestrin, “XGBoost: A Scalable Tree Boosting System,” Proc. ACM SIGKDD, 2016.",
+        "[5] G. Ke et al., “LightGBM: A Highly Efficient Gradient Boosting Decision Tree,” NeurIPS, 2017.",
+        "[6] Project repository: github.com/Venkat-023/Longitudinal-Temporal-Disease-Progression (commit 505e4e5, accessed 12 Aug 2026)."
+      ],
+      "notes": ""
+    },
+    {
+      "slide": 14,
+      "content": [
+        "Thank You!"
+      ],
+      "notes": ""
+    }
+  ]
+}

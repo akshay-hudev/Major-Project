@@ -62,7 +62,7 @@ def get_stable_recovery() -> Dict[str, Any]:
         ),
         "sample_data": {
             "patient_id": "PT-STABLE-001",
-            "patient_name": "Marcus Vance",
+            "patient_name": "Synthetic Case A — Stable Recovery",
             "visits": visits,
             "threshold": 0.335
         }
@@ -110,7 +110,7 @@ def get_decompensated_hf() -> Dict[str, Any]:
         ),
         "sample_data": {
             "patient_id": "PT-DECOMP-002",
-            "patient_name": "Eleanor Sterling",
+            "patient_name": "Synthetic Case B — Decompensated HF",
             "visits": visits,
             "threshold": 0.335
         }
@@ -158,7 +158,7 @@ def get_post_mi_deterioration() -> Dict[str, Any]:
         ),
         "sample_data": {
             "patient_id": "PT-POSTMI-003",
-            "patient_name": "Arthur Pendelton",
+            "patient_name": "Synthetic Case C — Post-MI Deterioration",
             "visits": visits,
             "threshold": 0.335
         }
@@ -205,7 +205,7 @@ def get_borderline_fragile() -> Dict[str, Any]:
         ),
         "sample_data": {
             "patient_id": "PT-BORDER-004",
-            "patient_name": "Clara Morales",
+            "patient_name": "Synthetic Case D — Borderline Fragile",
             "visits": visits,
             "threshold": 0.335
         }
@@ -253,7 +253,7 @@ def get_cardiogenic_shock() -> Dict[str, Any]:
         ),
         "sample_data": {
             "patient_id": "PT-SHOCK-005",
-            "patient_name": "Raymond Gallagher",
+            "patient_name": "Synthetic Case E — Cardiogenic Shock Trajectory",
             "visits": visits,
             "threshold": 0.335
         }

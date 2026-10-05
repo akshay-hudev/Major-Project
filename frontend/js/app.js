@@ -53,10 +53,17 @@ async function loadSystemStatus() {
     state.status = await res.json();
     const statusText = document.getElementById("headerStatusText");
     if (statusText) {
-      statusText.textContent = `Model: ${state.status.active_model} | ROC-AUC: ${state.status.best_benchmark_auc}`;
+      const mode = state.status.inference_mode === "research_bundle" ? "Research bundle" : "Demo inference";
+      statusText.textContent = `${mode}: ${state.status.active_model} | Published AUC ${state.status.best_benchmark_auc}`;
+    }
+    const banner = document.getElementById("demoIntegrityBanner");
+    if (banner && state.status.demo_disclaimer) {
+      banner.innerHTML = `<strong>Demo Mode:</strong> ${state.status.demo_disclaimer}`;
     }
   } catch (err) {
     console.warn("Could not fetch status:", err);
+    const statusText = document.getElementById("headerStatusText");
+    if (statusText) statusText.textContent = "Backend offline — start with: python run_app.py";
   }
 }
 
@@ -386,7 +393,8 @@ function renderPredictionResults(data) {
   if (threshElem) {
     threshElem.innerHTML = `
       Operating threshold: <strong>${(data.decision_threshold * 100).toFixed(1)}%</strong> | 
-      95% CI: <strong>${(data.confidence_interval[0] * 100).toFixed(1)}% – ${(data.confidence_interval[1] * 100).toFixed(1)}%</strong>
+      Approx. uncertainty band: <strong>${(data.confidence_interval[0] * 100).toFixed(1)}% – ${(data.confidence_interval[1] * 100).toFixed(1)}%</strong>
+      <div style="font-size:11px;color:#64748b;margin-top:4px;">Heuristic display band (not a formal statistical CI). Model: ${data.model_used}</div>
     `;
   }
 

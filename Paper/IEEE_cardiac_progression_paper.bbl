@@ -39,11 +39,22 @@ H.~Harutyunyan, H.~Khachatrian, D.~C. Kale, G.~Ver~Steeg, and A.~Galstyan,
   ``Multitask learning and benchmarking with clinical time series data,''
   \emph{Scientific Data}, vol.~6, no.~1, p.~96, 2019.
 
+\bibitem{rajkomar2018ehr}
+A.~Rajkomar, E.~Oren, K.~Chen, A.~M. Dai, N.~Hajaj, M.~Hardt, P.~J. Liu,
+  X.~Liu, J.~Marcus, M.~Sun \emph{et~al.}, ``Scalable and accurate deep
+  learning with electronic health records,'' \emph{npj Digital Medicine},
+  vol.~1, p.~18, 2018.
+
 \bibitem{choi2016retain}
 E.~Choi, M.~T. Bahadori, J.~A. Kulas, A.~Schuetz, W.~F. Stewart, and J.~Sun,
   ``{RETAIN}: An interpretable predictive model for healthcare using reverse
   time attention mechanism,'' in \emph{Advances in Neural Information
   Processing Systems}, vol.~29, 2016, pp. 3504--3512.
+
+\bibitem{lipton2016lstm}
+Z.~C. Lipton, D.~C. Kale, C.~Elkan, and R.~Wetzel, ``Learning to diagnose with
+  {LSTM} recurrent neural networks,'' \emph{arXiv preprint arXiv:1511.03677},
+  2016, [Online]. Available: \url{https://arxiv.org/abs/1511.03677}.
 
 \bibitem{chen2016xgboost}
 T.~Chen and C.~Guestrin, ``{XGBoost}: A scalable tree boosting system,'' in
@@ -70,15 +81,86 @@ X.~H. Lu, A.~Liu, S.-C. Fuh, Y.~Lian, L.~Guo, Y.~Yang, A.~Marelli, and Y.~Li,
   ``Recurrent disease progression networks for modelling risk trajectory of
   heart failure,'' \emph{PLOS ONE}, vol.~16, no.~1, p. e0245177, 2021.
 
+\bibitem{pandey2025scn}
+V.~Pandey, U.~K. Lilhore, and R.~Walia, ``Advanced heart disease prediction
+  through spatial and temporal feature learning with {SCN}-deep {BiLSTM},''
+  \emph{International Journal of Computational Intelligence Systems}, vol.~18,
+  no.~1, 2025.
+
+\bibitem{dritsas2024heartattack}
+E.~Dritsas and M.~Trigka, ``Application of deep learning for heart attack
+  prediction with explainable artificial intelligence,'' \emph{Computers},
+  vol.~13, no.~10, p. 244, 2024.
+
+\bibitem{goldberger2000physionet}
+A.~L. Goldberger, L.~A.~N. Amaral, L.~Glass, J.~M. Hausdorff, P.~C. Ivanov,
+  R.~G. Mark, J.~E. Mietus, G.~B. Moody, C.-K. Peng, and H.~E. Stanley,
+  ``{PhysioBank}, {PhysioToolkit}, and {PhysioNet}: Components of a new
+  research resource for complex physiologic signals,'' \emph{Circulation}, vol.
+  101, no.~23, pp. e215--e220, 2000.
+
+\bibitem{shickel2018deepehr}
+B.~Shickel, P.~J. Tighe, A.~Bihorac, and P.~Rashidi, ``Deep {EHR}: A survey of
+  recent advances in deep learning techniques for electronic health record
+  ({EHR}) analysis,'' \emph{IEEE Journal of Biomedical and Health Informatics},
+  vol.~22, no.~5, pp. 1589--1604, 2018.
+
 \bibitem{vaswani2017attention}
 A.~Vaswani, N.~Shazeer, N.~Parmar, J.~Uszkoreit, L.~Jones, A.~N. Gomez,
   {\L}.~Kaiser, and I.~Polosukhin, ``Attention is all you need,'' in
   \emph{Advances in Neural Information Processing Systems}, vol.~30, 2017.
 
+\bibitem{drozdov2024transformer}
+I.~Drozdov, B.~Szubert, C.~Murphy, K.~Brooksbank, and D.~J. Lowe, ``Early
+  detection of heart failure using in-patient longitudinal electronic health
+  records,'' \emph{PLOS ONE}, vol.~19, no.~12, p. e0314145, 2024.
+
+\bibitem{moen2025evolve}
+H.~Moen, V.~Raj, A.~Vabalas, M.~Perola, S.~Kaski, A.~Ganna, and P.~Marttinen,
+  ``Towards modeling evolving longitudinal health trajectories with a
+  transformer-based deep learning model,'' \emph{Annals of Epidemiology}, vol.
+  111, pp. 30--43, 2025.
+
+\bibitem{wang2024ogdtc}
+D.~Wang, X.~Ma, P.~E. Schulz, X.~Jiang, and Y.~Kim, ``Clinical outcome-guided
+  deep temporal clustering for disease progression subtyping,'' \emph{Journal
+  of Biomedical Informatics}, vol. 158, p. 104732, 2024.
+
+\bibitem{zangana2026explainable}
+H.~M. Zangana and M.~A. Sulaiman, ``Explainable transformer models for early
+  prediction of chronic diseases using longitudinal electronic health records
+  ({EHRs}),'' \emph{EAI Endorsed Transactions on AI and Robotics}, vol.~5,
+  2026.
+
+\bibitem{pedregosa2011sklearn}
+F.~Pedregosa, G.~Varoquaux, A.~Gramfort, V.~Michel, B.~Thirion, O.~Grisel,
+  M.~Blondel, P.~Prettenhofer, R.~Weiss, V.~Dubourg, J.~Vanderplas, A.~Passos,
+  D.~Cournapeau, M.~Brucher, M.~Perrot, and {\'E}.~Duchesnay, ``Scikit-learn:
+  Machine learning in {Python},'' \emph{Journal of Machine Learning Research},
+  vol.~12, pp. 2825--2830, 2011.
+
 \bibitem{niculescu2005calibration}
 A.~Niculescu-Mizil and R.~Caruana, ``Predicting good probabilities with
   supervised learning,'' in \emph{Proceedings of the 22nd International
   Conference on Machine Learning}, 2005, pp. 625--632.
+
+\bibitem{paszke2019pytorch}
+A.~Paszke, S.~Gross, F.~Massa, A.~Lerer, J.~Bradbury, G.~Chanan, T.~Killeen,
+  Z.~Lin, N.~Gimelshein, L.~Antiga, A.~Desmaison, A.~Kopf, E.~Yang, Z.~DeVito,
+  M.~Raison, A.~Tejani, S.~Chilamkurthy, B.~Steiner, L.~Fang, J.~Bai, and
+  S.~Chintala, ``{PyTorch}: An imperative style, high-performance deep learning
+  library,'' in \emph{Advances in Neural Information Processing Systems},
+  vol.~32, 2019.
+
+\bibitem{saito2015pr}
+T.~Saito and M.~Rehmsmeier, ``The precision-recall plot is more informative
+  than the {ROC} plot when evaluating binary classifiers on imbalanced
+  datasets,'' \emph{PLOS ONE}, vol.~10, no.~3, p. e0118432, 2015.
+
+\bibitem{davis2006pr}
+J.~Davis and M.~Goadrich, ``The relationship between precision-recall and {ROC}
+  curves,'' in \emph{Proceedings of the 23rd International Conference on
+  Machine Learning}, 2006, pp. 233--240.
 
 \bibitem{projectrepository}
 {Project Contributors}, ``Longitudinal temporal disease progression,'' GitHub

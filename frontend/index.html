@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CardioPulse AI — Longitudinal Cardiac Progression Intelligence</title>
   <link rel="stylesheet" href="/static/css/style.css" />
-  <!-- Chart.js for responsive longitudinal trajectory visualizations -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Chart.js vendored locally for offline faculty demos -->
+  <script src="/static/vendor/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -21,12 +21,12 @@
           </svg>
           CardioPulse AI
         </h1>
-        <p>Longitudinal Temporal Cardiac Deterioration Prediction · MIMIC-IV Clinical Cohort</p>
+        <p>Research prototype · Longitudinal cardiac progression prediction · MIMIC-IV cohort study</p>
       </div>
       <div class="header-badges">
         <div class="status-badge">
           <span class="status-dot"></span>
-          <span id="headerStatusText">Model: Calibrated GBM Ensemble | ROC-AUC: 0.9462</span>
+          <span id="headerStatusText">Loading model status…</span>
         </div>
         <a href="/docs" target="_blank" class="status-badge" style="text-decoration:none; color:#fff; background:rgba(255,255,255,0.18);">
           API Docs (/docs)
@@ -34,6 +34,11 @@
       </div>
     </div>
   </header>
+
+  <div id="demoIntegrityBanner" style="background:#fff7ed; border-bottom:1px solid #fdba74; color:#9a3412; padding:10px 5vw; font-size:13px; line-height:1.45;">
+    <strong>Demo Mode:</strong> Patient scenarios are synthetic (no PHI). Live predictions use the local HistGBM inference bundle.
+    Published held-out MIMIC-IV metrics (best soft-vote ensemble F1 = 0.7334, ROC-AUC = 0.9462) are shown under <em>Model Benchmarks</em> from saved experiment files — they are not regenerated from the live demo weights.
+  </div>
 
   <!-- Navigation Bar -->
   <nav class="app-nav">

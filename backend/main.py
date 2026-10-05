@@ -14,7 +14,12 @@ from fastapi.responses import FileResponse, PlainTextResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from backend.feature_extractor import FEATURE_METADATA, FEATURE_NAMES, NUM_FEATURES, SEQUENCE_LENGTH
-from backend.inference_engine import get_inference_engine
+from backend.inference_engine import (
+    RESEARCH_BEST_AUC,
+    RESEARCH_BEST_F1,
+    RESEARCH_BEST_MODEL,
+    get_inference_engine,
+)
 from backend.patient_presets import ALL_SCENARIOS
 from backend.schemas import (
     BatchPatientRecord,
@@ -59,13 +64,21 @@ def get_system_status() -> SystemStatusResponse:
     return SystemStatusResponse(
         status="operational",
         service="Cardiac Progression Temporal Intelligence",
-        version="2.0.0",
+        version="2.1.0",
         active_model=engine.model_name,
         feature_count=NUM_FEATURES,
         sequence_length=SEQUENCE_LENGTH,
-        dataset="MIMIC-IV 2.1 Cardiac Progression Cohort (35,256 stays)",
-        best_benchmark_auc=0.9462,
-        best_benchmark_f1=0.7334,
+        dataset="MIMIC-IV 2.1 Cardiac Progression Cohort (35,256 samples)",
+        best_benchmark_auc=RESEARCH_BEST_AUC,
+        best_benchmark_f1=RESEARCH_BEST_F1,
+        inference_mode=engine.inference_mode,
+        research_best_model=RESEARCH_BEST_MODEL,
+        demo_disclaimer=(
+            "Live scenario predictions use the local deployable HistGBM inference bundle. "
+            f"Published held-out MIMIC-IV results for {RESEARCH_BEST_MODEL} "
+            f"(F1={RESEARCH_BEST_F1:.4f}, ROC-AUC={RESEARCH_BEST_AUC:.4f}) are shown under Model Benchmarks "
+            "and come from results_improved.json — not invented at demo time."
+        ),
     )
 
 
@@ -269,7 +282,7 @@ def get_benchmarks() -> Dict[str, Any]:
     """Retrieve full comparative metrics, confusion matrices, and training specs for all models."""
     models_comparison = [
         {
-            "name": "GBM Soft-Vote Ensemble ⭐",
+            "name": "GBM Soft-Vote Ensemble (best)",
             "type": "Ensemble (HistGB + LightGBM + XGBoost)",
             "accuracy": 0.9083,
             "precision": 0.7226,
@@ -278,7 +291,7 @@ def get_benchmarks() -> Dict[str, Any]:
             "auc_roc": 0.9462,
             "pr_auc": 0.8302,
             "is_best": True,
-            "notes": "State-of-the-art on temporal features; calibrated + F1-tuned threshold."
+            "notes": "Best published result on temporal features; calibrated + F1-tuned threshold (results_improved.json)."
         },
         {
             "name": "GBM Stacked Ensemble",

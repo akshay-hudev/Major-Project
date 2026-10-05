@@ -30,6 +30,12 @@ ROOT = Path(__file__).resolve().parent.parent
 MODEL_DIR = ROOT / "models" / "deployable"
 BUNDLE_PATH = MODEL_DIR / "gbm_temporal.joblib"
 
+# Published MIMIC-IV held-out results (results_improved.json). Not the live demo weights.
+RESEARCH_BEST_MODEL = "GBM Soft-Vote Ensemble (HistGB + LightGBM + XGBoost)"
+RESEARCH_BEST_F1 = 0.7334
+RESEARCH_BEST_AUC = 0.9462
+RESEARCH_THRESHOLD = 0.335
+
 
 class CardiacInferenceEngine:
     """Manages model loading, feature transformation, inference, and clinical explainability."""
@@ -37,9 +43,26 @@ class CardiacInferenceEngine:
     def __init__(self):
         self.model: Optional[Any] = None
         self.calibrator: Optional[Any] = None
-        self.default_threshold: float = 0.335
-        self.model_name: str = "HistGradientBoosting + Isotonic Calibration"
+        self.default_threshold: float = RESEARCH_THRESHOLD
+        self.model_name: str = "Demo HistGBM (synthetic trajectories)"
+        self.inference_mode: str = "demo_synthetic"
+        self.bundle_source: str = "uninitialized"
         self._ensure_model_loaded()
+
+    def _classify_bundle(self, bundle: Dict[str, Any]) -> Tuple[str, str]:
+        """Distinguish research-trained bundles from demo/synthetic fallback bundles."""
+        feature_builder = str(bundle.get("feature_builder", ""))
+        has_metrics = "metrics_test" in bundle
+        # Real trainer writes this marker; synthetic fallback writes "temporal_features".
+        if has_metrics or "train_deployable_gbm" in feature_builder:
+            return (
+                "research_bundle",
+                "Calibrated HistGBM (MIMIC-IV deployable bundle)",
+            )
+        return (
+            "demo_synthetic",
+            "Demo HistGBM (synthetic trajectories; not MIMIC-trained weights)",
+        )
 
     def _ensure_model_loaded(self) -> None:
         """Load trained model bundle or synthesize an initial calibrated model."""
@@ -48,17 +71,19 @@ class CardiacInferenceEngine:
                 bundle = joblib.load(BUNDLE_PATH)
                 self.model = bundle.get("model")
                 self.calibrator = bundle.get("calibrator")
-                self.default_threshold = float(bundle.get("threshold", 0.335))
-                self.model_name = "Calibrated GBM (Deployable Bundle)"
+                self.default_threshold = float(bundle.get("threshold", RESEARCH_THRESHOLD))
+                self.inference_mode, self.model_name = self._classify_bundle(bundle)
+                self.bundle_source = str(BUNDLE_PATH.relative_to(ROOT))
+                print(f"[Inference] Loaded {self.bundle_source} as {self.inference_mode}: {self.model_name}")
                 return
             except Exception as e:
-                print(f"[Warning] Failed to load {BUNDLE_PATH}: {e}. Initializing fallback engine.")
+                print(f"[Warning] Failed to load {BUNDLE_PATH}: {e}. Initializing demo fallback engine.")
 
-        # If bundle doesn't exist, create an initial calibrated bundle
+        # If bundle doesn't exist, create an initial calibrated bundle for offline demos
         self._initialize_deployable_bundle()
 
     def _initialize_deployable_bundle(self) -> None:
-        """Train an initial calibrated HistGradientBoosting model bundle mirroring MIMIC-IV dynamics."""
+        """Train a demo-only HistGBM on synthetic scenario perturbations (not MIMIC weights)."""
         from backend.patient_presets import ALL_SCENARIOS
 
         rng = np.random.RandomState(42)
@@ -106,10 +131,12 @@ class CardiacInferenceEngine:
 
         self.model = clf
         self.calibrator = iso
-        self.default_threshold = 0.335
-        self.model_name = "HistGradientBoosting Ensemble (MIMIC-IV Calibrated)"
+        self.default_threshold = RESEARCH_THRESHOLD
+        self.inference_mode = "demo_synthetic"
+        self.model_name = "Demo HistGBM (synthetic trajectories; not MIMIC-trained weights)"
+        self.bundle_source = "generated_in_memory"
 
-        # Save bundle to disk
+        # Save bundle to disk for repeatable offline demos
         MODEL_DIR.mkdir(parents=True, exist_ok=True)
         bundle = {
             "model": clf,
@@ -118,9 +145,15 @@ class CardiacInferenceEngine:
             "feature_builder": "temporal_features",
             "seq_shape": [SEQUENCE_LENGTH, len(FEATURE_NAMES)],
             "created_at": datetime.datetime.now().isoformat(),
+            "inference_mode": "demo_synthetic",
+            "disclaimer": (
+                "Trained on synthetic perturbations of demo scenarios. "
+                "Published MIMIC-IV metrics come from results_improved.json, not this bundle."
+            ),
         }
         try:
             joblib.dump(bundle, BUNDLE_PATH)
+            self.bundle_source = str(BUNDLE_PATH.relative_to(ROOT))
         except Exception as e:
             print(f"[Notice] Could not save bundle to {BUNDLE_PATH}: {e}")
 

@@ -65,9 +65,12 @@ def main() -> None:
     print("=" * 72)
     print("  Initializing clinical inference engine and models...")
     engine = get_inference_engine()
-    print(f"  Active Model: {engine.model_name}")
-    print(f"  Calibrated Decision Threshold: {engine.default_threshold:.3f}")
-    print(f"  Temporal Sequence: 6 ICU Visits x 59 Features (826 engineered features)")
+    print(f"  Active inference model: {engine.model_name}")
+    print(f"  Inference mode:         {engine.inference_mode}")
+    print(f"  Decision threshold:     {engine.default_threshold:.3f}")
+    print(f"  Temporal sequence:      6 ICU visits x 59 features")
+    print(f"  Published MIMIC best:   soft-vote GBM  F1=0.7334  AUC=0.9462")
+    print("  (Published metrics are from results_improved.json; see Benchmarks tab.)")
     print("-" * 72)
 
     url = f"http://{args.host}:{port}"

@@ -195,3 +195,10 @@ class SystemStatusResponse(BaseModel):
     dataset: str
     best_benchmark_auc: float
     best_benchmark_f1: float
+    inference_mode: str = "demo_synthetic"
+    research_best_model: str = "GBM Soft-Vote Ensemble"
+    demo_disclaimer: str = (
+        "Live predictions use the local deployable HistGBM bundle. "
+        "Published MIMIC-IV metrics (F1/AUC) come from results_improved.json "
+        "and are shown separately under Model Benchmarks."
+    )

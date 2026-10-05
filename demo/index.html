@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cardiac Progression Demo</title>
+  <style>
+    :root {
+      --ink: #17233c; --muted: #657089; --line: #e5eaf2; --paper: #fff;
+      --bg: #f3f6fb; --blue: #2563eb; --blue2: #dbeafe; --red: #dc3545;
+      --amber: #d97706; --green: #15803d; --shadow: 0 12px 35px rgba(20,34,66,.09);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, sans-serif; }
+    header { color: #fff; background: linear-gradient(125deg,#10234e,#174ea6 58%,#0e7490); padding: 26px 5vw 76px; }
+    .brand { max-width: 1240px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand h1 { margin: 0 0 5px; font-size: clamp(22px,3vw,34px); letter-spacing: -.03em; }
+    .brand p { margin: 0; color: #dbe8ff; }
+    .badge { border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 8px 13px; white-space: nowrap; background: rgba(255,255,255,.1); }
+    main { max-width: 1240px; margin: -50px auto 50px; padding: 0 20px; }
+    .notice { padding: 10px 14px; border-radius: 10px; margin-bottom: 14px; background: #fff7dc; color: #704e00; border: 1px solid #f5dd8b; font-size: 13px; }
+    .grid { display: grid; grid-template-columns: 1.5fr .9fr; gap: 18px; }
+    .card { background: var(--paper); border: 1px solid var(--line); border-radius: 17px; box-shadow: var(--shadow); padding: 22px; }
+    .card h2 { margin: 0 0 4px; font-size: 18px; }
+    .sub { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
+    label { color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    select, button { font: inherit; }
+    select { width: 100%; padding: 11px 12px; margin-top: 6px; border: 1px solid #ccd4e2; border-radius: 9px; background: #fff; color: var(--ink); }
+    .patient-head { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: end; }
+    .patient-tag { color: var(--blue); background: var(--blue2); border-radius: 8px; padding: 9px 12px; font-weight: 700; }
+    .chart-wrap { height: 320px; margin-top: 15px; border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+    canvas { width: 100%; height: 100%; }
+    .legend { display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; color:var(--muted); font-size:12px; }
+    .legend span::before { content:""; display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; background:var(--c); }
+    .controls { display:grid; grid-template-columns:repeat(3,1fr); gap:10px 16px; margin-top:18px; }
+    .control output { float:right; color:var(--ink); font-weight:700; }
+    input[type=range] { width:100%; accent-color:var(--blue); }
+    .actions { display:flex; gap:10px; margin-top:18px; }
+    button { border:0; border-radius:9px; padding:11px 16px; cursor:pointer; font-weight:750; }
+    .primary { color:#fff; background:var(--blue); flex:1; box-shadow:0 5px 14px rgba(37,99,235,.25); }
+    .secondary { color:var(--ink); background:#e9eef7; }
+    .score { text-align:center; padding-top: 5px; }
+    .gauge { --risk: 0deg; width:190px; height:95px; overflow:hidden; margin:20px auto 8px; position:relative; }
+    .gauge::before { content:""; position:absolute; width:190px; height:190px; border-radius:50%; background:conic-gradient(from 270deg,#16a34a 0 60deg,#eab308 60deg 120deg,#dc2626 120deg 180deg,#e9edf4 180deg); }
+    .gauge::after { content:""; position:absolute; inset:25px; width:140px; height:140px; border-radius:50%; background:#fff; }
+    .needle { position:absolute; z-index:2; width:75px; height:4px; background:var(--ink); left:20px; top:92px; transform-origin:75px 2px; transform:rotate(var(--risk)); transition:transform .7s cubic-bezier(.2,.8,.2,1); border-radius:4px; }
+    .needle::after { content:""; position:absolute; width:14px; height:14px; right:-7px; top:-5px; border-radius:50%; background:var(--ink); }
+    .prob { font-size:42px; font-weight:800; letter-spacing:-.04em; }
+    .result { display:inline-block; padding:7px 11px; border-radius:999px; font-weight:800; font-size:13px; }
+    .result.low { color:var(--green); background:#dcfce7; } .result.medium { color:#92400e; background:#fef3c7; } .result.high { color:#991b1b; background:#fee2e2; }
+    .threshold { margin:14px 0 18px; color:var(--muted); font-size:12px; }
+    .contributors { border-top:1px solid var(--line); padding-top:15px; text-align:left; }
+    .contributor { display:grid; grid-template-columns:110px 1fr 34px; gap:8px; align-items:center; margin:9px 0; font-size:12px; }
+    .bar { height:8px; background:#edf0f5; border-radius:6px; overflow:hidden; }
+    .bar i { display:block; height:100%; background:linear-gradient(90deg,#f59e0b,#ef4444); border-radius:6px; }
+    .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:18px; }
+    .metric { border:1px solid var(--line); border-radius:12px; padding:15px; }
+    .metric b { font-size:24px; display:block; color:#174ea6; }
+    .metric span { font-size:12px; color:var(--muted); }
+    .full { grid-column:1/-1; }
+    .flow { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:17px 0 2px; overflow:auto; }
+    .step { min-width:135px; background:#f7f9fd; border:1px solid var(--line); border-radius:10px; padding:12px; text-align:center; font-weight:700; }
+    .arrow { color:#9aa5b8; font-size:21px; }
+    footer { text-align:center; color:var(--muted); padding:10px; font-size:12px; }
+    .pulse { animation:pulse .45s ease; } @keyframes pulse { 50% { transform:scale(1.03); } }
+    @media(max-width:850px){ .grid{grid-template-columns:1fr}.controls{grid-template-columns:repeat(2,1fr)}.metrics{grid-template-columns:repeat(2,1fr)}.badge{display:none} }
+  </style>
+</head>
+<body>
+<header><div class="brand"><div><h1>Cardiac Progression Intelligence</h1><p>Longitudinal risk prediction across six ICU visits</p></div><div class="badge">MIMIC-IV research project</div></div></header>
+<main>
+  <div class="notice"><strong>Presentation demo:</strong> patient profiles are synthetic and contain no protected health information. The performance metrics below are from the real held-out MIMIC-IV test set.</div>
+  <section class="grid">
+    <div class="card">
+      <h2>Patient trajectory</h2><div class="sub">Choose a scenario or change the latest measurements to demonstrate temporal inference.</div>
+      <div class="patient-head"><div><label for="scenario">Synthetic patient scenario</label><select id="scenario"></select></div><div class="patient-tag" id="caseTag">DEMO-001</div></div>
+      <div class="chart-wrap"><canvas id="chart"></canvas></div>
+      <div class="legend" id="legend"></div>
+      <div class="controls" id="controls"></div>
+      <div class="actions"><button class="secondary" id="reset">Reset case</button><button class="primary" id="predict">Run temporal analysis →</button></div>
+    </div>
+    <aside class="card score" id="scoreCard">
+      <h2>Worsening-risk estimate</h2><div class="sub">Illustrative inference on the synthetic trajectory</div>
+      <div class="gauge" id="gauge"><div class="needle"></div></div>
+      <div class="prob" id="probability">--</div><div><span class="result medium" id="classification">Awaiting analysis</span></div>
+      <div class="threshold">Demo decision threshold: <strong>33.5%</strong></div>
+      <div class="contributors"><strong>Leading temporal signals</strong><div id="contributors"><p class="sub">Run the analysis to calculate contributors.</p></div></div>
+    </aside>
+    <div class="card full">
+      <h2>Validated project results</h2><div class="sub">GBM soft-vote ensemble, held-out MIMIC-IV test set of 5,289 samples. These are saved experimental results—not synthetic demo outputs.</div>
+      <div class="metrics"><div class="metric"><b>0.9462</b><span>ROC-AUC</span></div><div class="metric"><b>0.7334</b><span>F1 score</span></div><div class="metric"><b>0.7226</b><span>Precision</span></div><div class="metric"><b>0.7444</b><span>Recall</span></div></div>
+      <div class="flow"><div class="step">MIMIC-IV<br><small>cardiac cohort</small></div><div class="arrow">→</div><div class="step">6 visits × 59<br><small>clinical features</small></div><div class="arrow">→</div><div class="step">Temporal<br><small>feature engineering</small></div><div class="arrow">→</div><div class="step">GBM ensemble<br><small>+ calibration</small></div><div class="arrow">→</div><div class="step">Worsening<br><small>risk probability</small></div></div>
+    </div>
+  </section>
+</main>
+<footer>Research prototype only · Not for diagnosis or clinical decision-making</footer>
+<script>
+const definitions={
+  hr:{name:'Heart rate',unit:'bpm',color:'#e63946',min:55,max:130},
+  spo2:{name:'SpO₂',unit:'%',color:'#2563eb',min:85,max:100},
+  sbp:{name:'Systolic BP',unit:'mmHg',color:'#7c3aed',min:75,max:150},
+  resp:{name:'Resp. rate',unit:'/min',color:'#0891b2',min:10,max:34},
+  wbc:{name:'WBC',unit:'K/µL',color:'#d97706',min:4,max:22},
+  bicarb:{name:'Bicarbonate',unit:'mEq/L',color:'#16a34a',min:12,max:30}
+};
+const scenarios=[
+ {id:'DEMO-001',name:'Stable trajectory',data:{hr:[78,77,80,79,77,76],spo2:[97,97,96,97,97,98],sbp:[124,126,122,125,128,126],resp:[17,16,18,17,16,16],wbc:[8.2,8,7.8,8.1,7.7,7.5],bicarb:[24,25,24,25,25,26]}},
+ {id:'DEMO-002',name:'Borderline changes',data:{hr:[78,82,84,87,90,94],spo2:[97,96,96,95,94,93],sbp:[126,123,119,116,112,108],resp:[17,18,19,20,21,22],wbc:[8,8.8,9.5,10.3,11.2,12],bicarb:[25,24,24,23,22,21]}},
+ {id:'DEMO-003',name:'Worsening trajectory',data:{hr:[82,88,94,101,109,116],spo2:[97,96,94,93,91,89],sbp:[128,121,115,107,99,91],resp:[17,19,21,23,25,28],wbc:[8,9.3,11,12.8,15,17],bicarb:[25,24,22,21,19,17]}}
+];
+let active=0, data={};
+const $=id=>document.getElementById(id);
+function clone(o){return JSON.parse(JSON.stringify(o))}
+function init(){
+ $('scenario').innerHTML=scenarios.map((s,i)=>`<option value="${i}">${s.name}</option>`).join('');
+ $('legend').innerHTML=Object.values(definitions).map(d=>`<span style="--c:${d.color}">${d.name}</span>`).join('');
+ $('scenario').onchange=e=>load(+e.target.value); $('reset').onclick=()=>load(active); $('predict').onclick=predict;
+ load(0); addEventListener('resize',draw);
+}
+function load(i){active=i;data=clone(scenarios[i].data);$('caseTag').textContent=scenarios[i].id;$('scenario').value=i;buildControls();draw();clearResult()}
+function buildControls(){
+ $('controls').innerHTML=Object.entries(definitions).map(([k,d])=>`<div class="control"><label>${d.name} <output id="out-${k}">${data[k][5]} ${d.unit}</output></label><input id="in-${k}" type="range" min="${d.min}" max="${d.max}" step="${k==='wbc'?'.1':'1'}" value="${data[k][5]}"></div>`).join('');
+ Object.keys(definitions).forEach(k=>$('in-'+k).oninput=e=>{data[k][5]=+e.target.value;$('out-'+k).textContent=e.target.value+' '+definitions[k].unit;draw();clearResult()});
+}
+function draw(){
+ const c=$('chart'),rect=c.getBoundingClientRect(),ratio=devicePixelRatio||1;c.width=rect.width*ratio;c.height=rect.height*ratio;const x=c.getContext('2d');x.scale(ratio,ratio);const w=rect.width,h=rect.height,p={l:42,r:16,t:15,b:28};x.clearRect(0,0,w,h);
+ x.strokeStyle='#e8edf4';x.fillStyle='#7c879b';x.font='11px system-ui';x.lineWidth=1;
+ for(let i=0;i<6;i++){const px=p.l+i*(w-p.l-p.r)/5;x.beginPath();x.moveTo(px,p.t);x.lineTo(px,h-p.b);x.stroke();x.fillText('Visit '+(i+1),px-18,h-8)}
+ Object.entries(definitions).forEach(([k,d])=>{const vals=data[k];x.strokeStyle=d.color;x.lineWidth=2.5;x.beginPath();vals.forEach((v,i)=>{const px=p.l+i*(w-p.l-p.r)/5,py=p.t+(d.max-v)/(d.max-d.min)*(h-p.t-p.b);i?x.lineTo(px,py):x.moveTo(px,py)});x.stroke();vals.forEach((v,i)=>{const px=p.l+i*(w-p.l-p.r)/5,py=p.t+(d.max-v)/(d.max-d.min)*(h-p.t-p.b);x.fillStyle=d.color;x.beginPath();x.arc(px,py,3.2,0,Math.PI*2);x.fill()})});
+}
+function slope(a){return(a[5]-a[0])/5}
+function calculate(){
+ const last=k=>data[k][5];
+ const raw={
+  'Low SpO₂':Math.max(0,94-last('spo2'))*.25+Math.max(0,-slope(data.spo2))*.12,
+  'Rising heart rate':Math.max(0,last('hr')-90)*.015+Math.max(0,slope(data.hr))*.06,
+  'Falling blood pressure':Math.max(0,105-last('sbp'))*.015+Math.max(0,-slope(data.sbp))*.035,
+  'Elevated respiratory rate':Math.max(0,last('resp')-20)*.06,
+  'Rising WBC':Math.max(0,last('wbc')-11)*.08,
+  'Low bicarbonate':Math.max(0,22-last('bicarb'))*.10
+ };
+ const z=-2.3+Object.values(raw).reduce((a,b)=>a+b,0),prob=1/(1+Math.exp(-z));return{prob,raw};
+}
+function predict(){
+ const {prob,raw}=calculate(),pct=(prob*100).toFixed(1),degree=-90+prob*180;$('gauge').style.setProperty('--risk',degree+'deg');$('probability').textContent=pct+'%';
+ const c=$('classification');c.className='result '+(prob>=.6?'high':prob>=.335?'medium':'low');c.textContent=prob>=.6?'HIGHER WORSENING RISK':prob>=.335?'WORSENING FLAG':'STABLE / IMPROVING FLAG';
+ const ranked=Object.entries(raw).sort((a,b)=>b[1]-a[1]).slice(0,4),mx=Math.max(.01,...ranked.map(x=>x[1]));$('contributors').innerHTML=ranked.map(([n,v])=>`<div class="contributor"><span>${n}</span><div class="bar"><i style="width:${Math.max(4,v/mx*100)}%"></i></div><b>${v?Math.round(v/mx*100):0}</b></div>`).join('');
+ $('scoreCard').classList.remove('pulse');void $('scoreCard').offsetWidth;$('scoreCard').classList.add('pulse');
+}
+function clearResult(){$('probability').textContent='--';$('classification').className='result medium';$('classification').textContent='Awaiting analysis';$('gauge').style.setProperty('--risk','-90deg');$('contributors').innerHTML='<p class="sub">Run the analysis to calculate contributors.</p>'}
+init();
+</script>
+</body>
+</html>

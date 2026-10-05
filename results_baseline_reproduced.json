@@ -1,0 +1,24 @@
+{
+  "note": "Baseline recipe retrained on the SAME arrays used for all improved models (seed-free, so ~ not bit-identical to reported results.json). Threshold 0.5.",
+  "bilstm_attention": {
+    "accuracy": 0.8308,
+    "precision": 0.5003,
+    "recall": 0.8103,
+    "f1": 0.6187,
+    "auc_roc": 0.906
+  },
+  "bigru": {
+    "accuracy": 0.8211,
+    "precision": 0.4837,
+    "recall": 0.8259,
+    "f1": 0.6101,
+    "auc_roc": 0.9099
+  },
+  "transformer": {
+    "accuracy": 0.8399,
+    "precision": 0.5174,
+    "recall": 0.8114,
+    "f1": 0.6319,
+    "auc_roc": 0.9168
+  }
+}

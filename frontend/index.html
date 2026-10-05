@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CardioPulse AI — Longitudinal Cardiac Progression Intelligence</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <!-- Chart.js for responsive longitudinal trajectory visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-section">
+        <h1>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 7.65l.77.78L12 20.68l7.65-7.67.77-.78a5.4 5.4 0 0 0 0-7.65z"></path>
+            <path d="M3.5 12h3l2-4 3 8 2-4h4"></path>
+          </svg>
+          CardioPulse AI
+        </h1>
+        <p>Longitudinal Temporal Cardiac Deterioration Prediction · MIMIC-IV Clinical Cohort</p>
+      </div>
+      <div class="header-badges">
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span id="headerStatusText">Model: Calibrated GBM Ensemble | ROC-AUC: 0.9462</span>
+        </div>
+        <a href="/docs" target="_blank" class="status-badge" style="text-decoration:none; color:#fff; background:rgba(255,255,255,0.18);">
+          API Docs (/docs)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav class="app-nav">
+    <div class="nav-container">
+      <button class="nav-tab active" data-tab="tab-predictor">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Patient Predictor
+      </button>
+      <button class="nav-tab" data-tab="tab-batch">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Batch CSV Analysis
+      </button>
+      <button class="nav-tab" data-tab="tab-benchmarks">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Model Benchmarks
+      </button>
+      <button class="nav-tab" data-tab="tab-dictionary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Feature Dictionary (59)
+      </button>
+      <button class="nav-tab" data-tab="tab-api">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        API Integration
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- ── TAB 1: Patient Predictor & Simulator ────────────────────────────── -->
+    <div id="tab-predictor" class="tab-pane active">
+      <!-- Scenario Selection Bar -->
+      <div class="scenario-bar">
+        <label for="scenarioSelect">Clinical Scenario:</label>
+        <select id="scenarioSelect"></select>
+        <span class="patient-tag" id="patientTag" style="font-weight:700; color:#1d4ed8; background:#dbeafe; padding:8px 14px; border-radius:8px;">
+          PT-1049 · Active Patient
+        </span>
+      </div>
+
+      <div style="background:#f1f5f9; padding:12px 18px; border-radius:8px; margin-bottom:20px; font-size:13px; color:#334155; border-left:4px solid #0284c7;">
+        <strong>Patient History:</strong> <span id="scenarioNarrative">Loading narrative...</span>
+      </div>
+
+      <div class="grid-predictor">
+        <!-- Left Column: Trajectory Chart & Visit Editor -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Longitudinal Visit Trajectory (6 ICU Encounters)
+                </div>
+                <div class="card-subtitle">Select any visit on the timeline to inspect or edit clinical measurements</div>
+              </div>
+            </div>
+
+            <!-- Visit Selector Pills -->
+            <div class="visit-timeline" id="visitTimeline"></div>
+
+            <!-- Trajectory Chart -->
+            <div class="chart-box">
+              <canvas id="trajectoryCanvas"></canvas>
+            </div>
+
+            <!-- Operating Threshold Controls -->
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:12px 16px; border-radius:8px; margin-bottom:18px; border:1px solid #e2e8f0;">
+              <div>
+                <strong style="font-size:13px; color:#1e293b;">Decision Threshold:</strong>
+                <span id="thresholdValue" style="color:#2563eb; font-weight:700; font-size:14px; margin-left:6px;">33.5%</span>
+                <div style="font-size:11px; color:#64748b;">Calibrated optimal threshold maximizing F1 on the MIMIC-IV cohort</div>
+              </div>
+              <input type="range" id="thresholdSlider" min="0.10" max="0.80" step="0.005" value="0.335" style="width:160px; accent-color:#2563eb;" oninput="document.getElementById('thresholdValue').textContent = (this.value * 100).toFixed(1) + '%';" />
+            </div>
+
+            <!-- Visit Features Inputs -->
+            <div id="inputsContainer"></div>
+
+            <div style="margin-top:20px;">
+              <button class="btn-primary" id="predictBtn" onclick="runPrediction()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <span>Run Temporal Analysis →</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Prediction Scorecard & Clinical Intelligence -->
+        <div>
+          <div class="card score-card">
+            <div class="card-title" style="justify-content:center; margin-bottom:4px;">
+              Worsening-Risk Assessment
+            </div>
+            <div class="card-subtitle" style="margin-bottom:12px;">Calibrated Probability of Acute Cardiac Decline</div>
+
+            <!-- Radial Gauge -->
+            <div class="gauge-wrap">
+              <div class="gauge-arc"></div>
+              <div class="gauge-mask"></div>
+              <div class="gauge-needle" id="gaugeNeedle"></div>
+            </div>
+
+            <!-- Output Values -->
+            <div class="prob-display" id="probPercent">--%</div>
+            <div>
+              <span class="classification-badge badge-mod" id="classificationBadge">Awaiting Analysis</span>
+            </div>
+            <div class="threshold-info" id="thresholdDisplay">
+              Operating threshold: <strong>33.5%</strong>
+            </div>
+
+            <!-- Leading Contributors -->
+            <div class="contributors-section">
+              <div class="contributors-title">Leading Temporal Signals</div>
+              <div id="contributorsList">
+                <p style="font-size:13px; color:#64748b;">Run temporal analysis to isolate leading risk signals.</p>
+              </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="recommendations-section">
+              <div class="contributors-title">Clinical Decision Support</div>
+              <div id="recommendationsList">
+                <p style="font-size:13px; color:#64748b;">Targeted clinical interventions will appear here based on trajectory indicators.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB 2: Batch Patient Analysis ─────────────────────────────────── -->
+    <div id="tab-batch" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Cohort Batch Screening & File Ingestion</div>
+            <div class="card-subtitle">Upload a multi-patient trajectory CSV to evaluate risk across an entire ICU cohort</div>
+          </div>
+          <div>
+            <a href="/api/sample-csv" class="btn-secondary" style="text-decoration:none; display:inline-block;">
+              Download Sample CSV
+            </a>
+          </div>
+        </div>
+
+        <div class="dropzone" id="batchDropzone">
+          <input type="file" id="batchFileInput" accept=".csv" style="display:none;" />
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8" style="margin-bottom:10px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <p style="font-weight:700; color:#1e293b;">Click to browse or drop patient trajectories CSV here</p>
+          <small style="color:#64748b;">Supports multi-visit CSV records with patient_id and standard 59 clinical feature columns</small>
+        </div>
+
+        <button class="btn-primary" id="runBatchBtn" disabled style="max-width:280px; margin:0 auto 20px; display:block;">
+          Run Batch Inference
+        </button>
+
+        <!-- Batch Results Card -->
+        <div id="batchResultsCard" style="display:none;">
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:20px;">
+            <div style="background:#f8fafc; padding:16px; border-radius:8px; text-align:center; border:1px solid #e2e8f0;">
+              <small style="color:#64748b; font-weight:700; text-transform:uppercase;">Total Processed</small>
+              <div id="batchTotal" style="font-size:28px; font-weight:800; color:#1e293b;">0</div>
+            </div>
+            <div style="background:#fee2e2; padding:16px; border-radius:8px; text-align:center; border:1px solid #fecaca;">
+              <small style="color:#991b1b; font-weight:700; text-transform:uppercase;">Predicted Worsening</small>
+              <div id="batchWorsening" style="font-size:28px; font-weight:800; color:#dc2626;">0 (0%)</div>
+            </div>
+            <div style="background:#dcfce7; padding:16px; border-radius:8px; text-align:center; border:1px solid #bbf7d0;">
+              <small style="color:#166534; font-weight:700; text-transform:uppercase;">Stable / Improving</small>
+              <div id="batchStable" style="font-size:28px; font-weight:800; color:#16a34a;">0</div>
+            </div>
+          </div>
+
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>Patient ID</th>
+                <th>Probability</th>
+                <th>Risk Tier</th>
+                <th>Classification</th>
+                <th>Primary Risk Driver</th>
+              </tr>
+            </thead>
+            <tbody id="batchTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB 3: Model Benchmarks & Research Analytics ───────────────────── -->
+    <div id="tab-benchmarks" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">MIMIC-IV Held-Out Test Set Evaluation (N = 5,289)</div>
+            <div class="card-subtitle">Comparison of deep sequence baselines vs. gradient-boosted decision trees on engineered temporal features</div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:24px;">
+          <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:16px; text-align:center;">
+            <div style="font-size:12px; font-weight:700; color:#1d4ed8; text-transform:uppercase;">Top ROC-AUC</div>
+            <div style="font-size:32px; font-weight:800; color:#1e40af;">0.9462</div>
+            <small style="color:#3b82f6;">GBM Soft-Vote Ensemble</small>
+          </div>
+          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:16px; text-align:center;">
+            <div style="font-size:12px; font-weight:700; color:#15803d; text-transform:uppercase;">Top F1-Score</div>
+            <div style="font-size:32px; font-weight:800; color:#166534;">0.7334</div>
+            <small style="color:#22c55e;">+16% over Transformer</small>
+          </div>
+          <div style="background:#fef3c7; border:1px solid #fde68a; border-radius:10px; padding:16px; text-align:center;">
+            <div style="font-size:12px; font-weight:700; color:#b45309; text-transform:uppercase;">Top Precision</div>
+            <div style="font-size:32px; font-weight:800; color:#92400e;">0.7747</div>
+            <small style="color:#d97706;">HistGBM (Rich Features)</small>
+          </div>
+          <div style="background:#fdf2f8; border:1px solid #fbcfe8; border-radius:10px; padding:16px; text-align:center;">
+            <div style="font-size:12px; font-weight:700; color:#be185d; text-transform:uppercase;">Top PR-AUC</div>
+            <div style="font-size:32px; font-weight:800; color:#9d174d;">0.8307</div>
+            <small style="color:#ec4899;">Stacked Ensemble</small>
+          </div>
+        </div>
+
+        <table class="benchmark-table">
+          <thead>
+            <tr>
+              <th>Model Architecture</th>
+              <th>Accuracy</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1 Score</th>
+              <th>AUC-ROC</th>
+              <th>PR-AUC</th>
+            </tr>
+          </thead>
+          <tbody id="benchmarkTableBody"></tbody>
+        </table>
+
+        <!-- Experimental Result Plots Gallery -->
+        <h3 style="margin-top:32px; margin-bottom:8px; font-size:16px;">Validated Experimental Figures</h3>
+        <p style="font-size:13px; color:#64748b; margin-bottom:16px;">
+          Generated directly from held-out test predictions (5,289 samples, 896 positives)
+        </p>
+        <div class="figure-gallery" id="benchmarkGallery"></div>
+      </div>
+    </div>
+
+    <!-- ── TAB 4: Feature Dictionary ──────────────────────────────────────── -->
+    <div id="tab-dictionary" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">MIMIC-IV 59-Feature Clinical Reference Dictionary</div>
+            <div class="card-subtitle">Physiological categories, standard hospital units, normal reference ranges, and clinical significance</div>
+          </div>
+        </div>
+
+        <div class="search-filter-bar">
+          <input type="text" id="dictSearch" class="search-input" placeholder="Search feature name, identifier, or clinical description..." />
+          <select id="dictCategoryFilter" style="padding:10px 14px; border:1px solid #cbd5e1; border-radius:8px;">
+            <option value="">All Categories (59)</option>
+            <option value="Vital Signs">Vital Signs</option>
+            <option value="Cardiac Biomarkers">Cardiac Biomarkers</option>
+            <option value="Renal & Metabolic">Renal & Metabolic</option>
+            <option value="Electrolytes">Electrolytes</option>
+            <option value="Hematology (CBC)">Hematology (CBC)</option>
+            <option value="Clinical Context">Clinical Context</option>
+            <option value="Temporal & Context">Temporal & Context</option>
+          </select>
+        </div>
+
+        <table class="benchmark-table">
+          <thead>
+            <tr>
+              <th>Feature Name / Key</th>
+              <th>Category</th>
+              <th>Unit</th>
+              <th>Normal Range</th>
+              <th>Clinical Significance & Temporal Role</th>
+            </tr>
+          </thead>
+          <tbody id="dictTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── TAB 5: API Documentation ───────────────────────────────────────── -->
+    <div id="tab-api" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">RESTful API & Integration Guide</div>
+            <div class="card-subtitle">Integrate the temporal prediction engine directly into EHR systems, workflows, or analytical pipelines</div>
+          </div>
+        </div>
+
+        <h4 style="margin-bottom:8px;">Interactive Swagger Documentation</h4>
+        <p style="font-size:13px; color:#475569; margin-bottom:16px;">
+          The full interactive OpenAPI schema is available at <a href="/docs" target="_blank" style="color:#2563eb; font-weight:700;">http://127.0.0.1:8000/docs</a>.
+        </p>
+
+        <h4 style="margin-top:20px; margin-bottom:8px;">Python Integration Example</h4>
+        <pre style="background:#0f172a; color:#f8fafc; padding:16px; border-radius:8px; overflow-x:auto; font-size:13px; font-family:monospace;">
+import requests
+
+url = "http://127.0.0.1:8000/api/predict"
+
+# Fetch a ready-to-test patient trajectory
+scenario = requests.get("http://127.0.0.1:8000/api/scenarios/DEMO-002").json()
+payload = scenario["sample_data"]
+
+# Run temporal inference
+response = requests.post(url, json=payload)
+result = response.json()
+
+print(f"Risk Probability: {result['probability_percent']}")
+print(f"Classification:   {result['classification']}")
+print(f"Risk Tier:        {result['risk_level']}")
+for driver in result["top_contributors"][:3]:
+    print(f" - {driver['feature_name']}: {driver['temporal_descriptor']}")
+        </pre>
+
+        <h4 style="margin-top:20px; margin-bottom:8px;">cURL Command</h4>
+        <pre style="background:#0f172a; color:#f8fafc; padding:16px; border-radius:8px; overflow-x:auto; font-size:13px; font-family:monospace;">
+curl -X POST "http://127.0.0.1:8000/api/predict" \
+     -H "Content-Type: application/json" \
+     -d @sample_patient.json
+        </pre>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div><strong>CardioPulse AI</strong> · Longitudinal Temporal Disease Progression Platform</div>
+    <div>PhysioNet MIMIC-IV 2.1 Research Cohort · Research prototype only · Not for diagnostic use</div>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+This is BibTeX, Version 0.99e
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: IEEE_cardiac_progression_paper.aux
+Reallocating 'name_of_file' (item size: 1) to 9 items.
+The style file: IEEEtran.bst
+Reallocating 'name_of_file' (item size: 1) to 11 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'wiz_functions' (item size: 4) to 6000 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Database file #1: references.bib
+-- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+
+Done.
+You've used 12 entries,
+            4087 wiz_defined-function locations,
+            892 strings with 10139 characters,
+and the built_in function-call counts, 10074 in all, are:
+= -- 767
+> -- 326
+< -- 64
++ -- 170
+- -- 68
+* -- 498
+:= -- 1448
+add.period$ -- 25
+call.type$ -- 12
+change.case$ -- 14
+chr.to.int$ -- 132
+cite$ -- 12
+duplicate$ -- 730
+empty$ -- 812
+format.name$ -- 79
+if$ -- 2355
+int.to.chr$ -- 0
+int.to.str$ -- 12
+missing$ -- 156
+newline$ -- 59
+num.names$ -- 12
+pop$ -- 378
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 2
+skip$ -- 781
+stack$ -- 0
+substring$ -- 346
+swap$ -- 588
+text.length$ -- 20
+text.prefix$ -- 0
+top$ -- 5
+type$ -- 12
+warning$ -- 0
+while$ -- 35
+width$ -- 14
+write$ -- 141
